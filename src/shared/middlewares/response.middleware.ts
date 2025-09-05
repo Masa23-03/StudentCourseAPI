@@ -27,4 +27,6 @@ export const ResponseEnhancer=(req:Request, res:Response , next:NextFunction)=>{
     res.create= (data)=>res.status(201).json(formatApiResponse({success:true , data}));
     res.error= (err)=>res.status(err.statusCode).json(formatApiResponse({success:false ,error:err }));
 
+    next();
+
 }

@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express, {   Response , Request , NextFunction } from "express";
 import { getEnvsOrThrow } from "./shared/utils/envs.utils";
 import { ResponseEnhancer } from "./shared/middlewares/response.middleware";
@@ -8,6 +9,7 @@ import { userService } from "./modules/users/user.service";
 import { userRouter } from "./modules/users/user.routes";
 import { courseRouter } from "./modules/courses/course.routes";
 import { authRouter } from "./modules/auth/auth.routes";
+
 
 const app =express();
 const Port=getEnvsOrThrow('PORT');
@@ -32,9 +34,9 @@ app.use("/api/v1/users", userRouter);
 //course
 app.use('/api/v1/courses', courseRouter);
 //auth
-app.use('api/v1/auth' , authRouter);
+app.use('/api/v1/auth' , authRouter);
 //handle 404
-const notFoundPath=path.join(__dirname , 'public' , '404.html');
+const notFoundPath=path.join(__dirname , '../' , 'public' , '404.html');
 const notFoundPageHtml=fs.readFileSync(notFoundPath  , 'utf-8');
 
 app.use((req:Request , res:Response  ) =>{ 

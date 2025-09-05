@@ -5,10 +5,13 @@ import { CustomError } from "../utils/error.utils"
 import { HttpErrorStatus } from "../utils/types.utils"
 import { userService } from "../../modules/users/user.service"
 
+
+
 export const isAuthenticated= (req:Request , res:Response , next:NextFunction)=>{
-const authHeader=req.headers.authorization;
+  const authHeader = req.headers.authorization?.trim();
+  
 if(authHeader){
-    const jwtToken=authHeader.slice(7).trim();
+    const jwtToken=authHeader.replace(`Bearer `, '');
     try {
         const payLoad=verifyJwt(jwtToken);
         const user=userService.getUser(payLoad.sub);

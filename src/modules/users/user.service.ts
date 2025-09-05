@@ -8,11 +8,11 @@ import { removeFields } from "../../shared/utils/object.utils";
 class UserService{
 private repo=new UserRepository();
 
- adminUserSeed(){
+async  adminUserSeed(){
     const exist=this.repo.findByEmail('admin@no.com');
     if(!exist){
-        const hashedPassword=createArgonHash('admin123');
-        this.repo.create({name:'Admin' , password:hashedPassword.toString() , email:'admin@no.com' , role:'ADMIN'})
+        const hashedPassword=await createArgonHash('admin123');
+        this.repo.create({name:'Admin' , password:hashedPassword , email:'admin@no.com' , role:'ADMIN'})
     }
 }
 getUsers(page:number , limit:number){
