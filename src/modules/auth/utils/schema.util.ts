@@ -10,3 +10,8 @@ export const registerDTOSchema=userSchema.pick({
 
 
 })satisfies ZodType<registerDTO>;
+
+export const loginDTOSchema = userSchema.pick({
+    email: true,
+    password: true
+}) satisfies ZodType<loginDTO>;

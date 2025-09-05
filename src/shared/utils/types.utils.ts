@@ -8,6 +8,7 @@ export const HttpErrorStatus = {
   PaymentRequired: 402,
   Forbidden: 403,
   NotFound: 404,
+  ServerError:500
 
 
 

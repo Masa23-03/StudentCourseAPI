@@ -2,6 +2,7 @@ import z , {ZodType} from 'zod'
 
 import { Course } from '../course.entity'
 
+
 export const courseSchema=z.object({
   id: z.string(),
   title: z.string().min(1),
@@ -11,3 +12,5 @@ export const courseSchema=z.object({
   updatedAt: z.date(),
   creatorId: z.string()
 })satisfies ZodType<Course>
+
+

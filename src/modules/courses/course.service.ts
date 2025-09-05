@@ -1,6 +1,7 @@
 import { CourseRepository } from "./course.repository"
 import { userService } from "../users/user.service";
 import { Course } from "./course.entity"
+import { removeFields } from "../../shared/utils/object.utils";
 
 
 class CourseService{
@@ -8,12 +9,16 @@ private repo=new CourseRepository();
 getCourses(){
     return this.repo.findAll();
 }
-getCourse(id:string): Course|undefined {
-return this.repo.findById(id);
+getCourse(id:string): Omit<Course , 'creatorId'>|null {
+    const course=this.repo.findById(id);
+    if(!course)return null;
+    const courseWithoutUserId=removeFields(course , ['creatorId']);
+    return courseWithoutUserId;
+ 
 }
 
 
-createCourse(title:string , description:string ,creatorId:string , image?:string  ):Course | null{
+createCourse(title:string , description:string ,creatorId:string , image?:string  ):Omit<Course , 'creatorId'> | null{
 //check id user exist
 const creator=userService.getUser(creatorId);
 if(!creator)return null;
@@ -29,10 +34,12 @@ creatorId
 }
 if(image) course.image=image;
 
-return this.repo.create(course);
+const courseCreated= this.repo.create(course);
+const courseWithoutUserId=removeFields(courseCreated , ['creatorId']);
+return courseWithoutUserId;
 
 }
-updateCourse(requestedId:string , courseId:string ,  title?:string , description?:string , image?:string ): Course |null{
+updateCourse(requestedId:string , courseId:string ,  title?:string , description?:string , image?:string ):Omit<Course , 'creatorId'> | null{
 
 const course = this.repo.findById(courseId); 
 if(!course)return null;
@@ -46,7 +53,10 @@ if(user.id === course.creatorId){
     if(title)updatedCourse.title=title;
     if(description)updatedCourse.description=description;
     if(image)updatedCourse.image=image;
-    return this.repo.update(courseId , updatedCourse);
+    
+    const updateCourse= this.repo.update(courseId , updatedCourse);
+    if(!updateCourse)return null;
+    return removeFields(updateCourse, ['creatorId']);
 }
 return null;
 
