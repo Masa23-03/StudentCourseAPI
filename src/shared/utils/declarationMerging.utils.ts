@@ -1,4 +1,6 @@
-type MyEnvs={
+import { UnifiedErrorApiResponse } from "../middlewares/response.middleware";
+
+export type MyEnvs={
 PORT:number,
 JWT_SECRET:string,
 MAX_IMAGE_SIZE_MB:number,
@@ -16,7 +18,7 @@ declare global{
         interface Response{
             create:(data:object)=>this;
             ok:(data:object)=>this;
-            error:(error:unknown)=>this;
+            error:(error:UnifiedErrorApiResponse)=>this;
 
         }
 
