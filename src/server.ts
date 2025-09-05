@@ -35,16 +35,18 @@ app.use((req:Request , res:Response  ) =>{
 
     }
     const dynamicHtml=notFoundPageHtml.replace(/{{requestedPath}}/g , req.path).replace(/{{method}}/g , new Date().toLocaleDateString());
-    //TODO: edit the message
-    res.error({statusCode:404 , message:'dynamic not found'})
+   
+    res.error({statusCode:404 , message:dynamicHtml})
 });
 
-app.use( (err:Error , req:Request , res:Response , next:NextFunction) =>{
+app.use( (err:unknown , req:Request , res:Response , next:NextFunction) =>{
     HandleError(err , res);
 
 
 });
 
 
-app.listen(Port);
+app.listen(Port , ()=>{
+  console.log('App is running in port: ', Port);    
+});
 

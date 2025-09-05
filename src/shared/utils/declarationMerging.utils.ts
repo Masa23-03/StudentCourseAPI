@@ -1,4 +1,5 @@
 import { UnifiedErrorApiResponse } from "../middlewares/response.middleware";
+import { User } from "../../modules/users/user.entity";
 
 export type MyEnvs={
 PORT:number,
@@ -23,7 +24,7 @@ declare global{
         }
 
         interface Request{
-            
+            user?:Pick<User , 'id'|'name'|'role'>
         }
     }
 }
