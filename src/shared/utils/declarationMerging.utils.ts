@@ -1,3 +1,4 @@
+//? declaration merging.ts 
 import { UnifiedErrorApiResponse } from "../middlewares/response.middleware";
 import { User } from "../../modules/users/user.entity";
 

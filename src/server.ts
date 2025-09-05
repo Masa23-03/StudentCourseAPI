@@ -4,6 +4,7 @@ import { ResponseEnhancer } from "./shared/middlewares/response.middleware";
 import path from "path";
 import fs from 'fs'
 import { HandleError } from "./shared/utils/error.utils";
+import { userService } from "./modules/users/user.service";
 
 const app =express();
 const Port=getEnvsOrThrow('PORT');
@@ -20,6 +21,7 @@ app.use(express.static(path.join(__dirname , 'public') , {
 
 app.use('/uploads' , express.static(path.join(__dirname , 'uploads')));
 
+userService.adminUserSeed();
 //! routes 
 //auth
 //user

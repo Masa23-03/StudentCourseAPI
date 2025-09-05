@@ -1,8 +1,9 @@
 
 type Required={
-    id: string;
-    createdAt: Date;
-    updatedAt: Date
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+   
    
 
 }
@@ -10,44 +11,47 @@ type Required={
 export class Repository<T extends Required>{
 //findAll, findById, create, update, delete
 
-private arr:T[]=[];
-private idCounter=1;
+  private arr: T[] = [];
+  private idCounter = 1;
 
 
+constructor(arr: T[] = []){
+    this.arr=arr;
 
-public  findAll(): T[]{
-return this.arr;
 }
+ public findAll(): T[] {
+    return this.arr; 
+  }
 
 public findById(id:string): T|undefined{
 return this.arr.find( (ele) => ele.id===id);
 
 }
 
-public create(payload: Omit<T, "id" | "createdAt" | "updatedAt">):T{
-    const element:T={
-         ...(payload as object),
-        id:this.idCounter.toString(),
-        createdAt:new Date(),
-        updatedAt: new Date(),
-       
+public create(payload: Omit<T, "id" | "createdAt" | "updatedAt">): T{
 
-    }as T;
+ const data = {
+      ...(payload as object),
+      id: this.idCounter.toString(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as T;
 
-    this.idCounter++;
-    this.arr.push(element);
+    this.arr.push(data);
    
-    return element;
+    this.idCounter++;
+    
+   
+    return data;
 
 
 }
 
-public update(id:string , value:Omit<Partial<T> , "id"|"createdAt" | "updatedAt">): T|null{
+public update(id: string, payLoad: Omit<Partial<T>, "id" | "createdAt" | "updatedAt">): T | null {
 const element=this.findById(id);
 if(!element) return null;
-Object.assign(element , value);
+Object.assign(element , payLoad);
 element.updatedAt=new Date();
-
 return element;
 
 
