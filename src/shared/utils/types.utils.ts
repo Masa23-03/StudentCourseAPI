@@ -19,3 +19,15 @@ export type HttpErrorStatusType=typeof HttpErrorStatus;
 export type ErrorStatusCode=HttpErrorStatusType[ keyof HttpErrorStatusType];
 
 export type ApiStatusCode=|ErrorStatusCode|200|201|202|204
+
+export const RoleConst={
+admin:'ADMIN',
+student:'STUDENT', 
+coach:'COACH'
+}as const;
+
+
+export type RoleConstType=typeof RoleConst;
+export type Role=RoleConstType[keyof RoleConstType];
+
+

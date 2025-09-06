@@ -44,7 +44,8 @@ app.use((req:Request , res:Response  ) =>{
         return res.error({statusCode:404 , message:`Route ${req.method} ${req.path} not found`});
 
     }
-    const dynamicHtml=notFoundPageHtml.replace(/{{requestedPath}}/g , req.path).replace(/{{method}}/g , new Date().toLocaleDateString());
+    const dynamicHtml=notFoundPageHtml.replace(/{{requestedPath}}/g , req.path).replace(/{{method}}/g , 
+    new Date().toLocaleDateString());
    
     res.error({statusCode:404 , message:dynamicHtml.toString()})
 });

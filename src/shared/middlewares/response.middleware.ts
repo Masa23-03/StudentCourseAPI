@@ -1,7 +1,6 @@
-import { RequestHandler } from "express";
 import { ApiStatusCode } from "../utils/types.utils";
 import { Response , Request , NextFunction } from "express";
-import { error } from "console";
+
 
 export type UnifiedErrorApiResponse={
 statusCode:ApiStatusCode,

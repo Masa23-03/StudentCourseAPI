@@ -1,7 +1,8 @@
 import { UserRepository } from "./user.repository";
-import { Role, User } from "./user.entity";
+import {  User } from "./user.entity";
 import { createArgonHash } from "../auth/utils/argon.util";
 import { removeFields } from "../../shared/utils/object.utils";
+import { Role } from "../../shared/utils/types.utils";
 
 
 

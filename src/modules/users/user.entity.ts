@@ -1,5 +1,5 @@
+import { Role } from "../../shared/utils/types.utils";
 
-export type Role="ADMIN" | "COACH" | "STUDENT"
 export interface User{
         id: string;
         name: string;

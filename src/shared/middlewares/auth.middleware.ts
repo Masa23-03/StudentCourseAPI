@@ -1,6 +1,6 @@
 import { Request , Response , NextFunction } from "express" 
 import { verifyJwt } from "../../modules/auth/utils/jwt.util"
-import { Role } from "../../modules/users/user.entity"
+import { Role } from "../utils/types.utils"
 import { CustomError } from "../utils/error.utils"
 import { HttpErrorStatus } from "../utils/types.utils"
 import { userService } from "../../modules/users/user.service"
