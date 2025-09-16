@@ -56,8 +56,9 @@ app.use( (err:unknown , req:Request , res:Response , next:NextFunction) =>{
 
 });
 
-
+if(process.env.NODE_ENV !== 'test'){
 app.listen(Port , ()=>{
   console.log('App is running in port: ', Port);    
 });
 
+}

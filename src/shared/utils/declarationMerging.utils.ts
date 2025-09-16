@@ -6,7 +6,7 @@ export type MyEnvs={
 PORT:number,
 JWT_SECRET:string,
 MAX_IMAGE_SIZE_MB:number,
-NODE_ENV:"development"|"staging"|"production",
+NODE_ENV:"development"|"staging"|"production"|"test",
 }
 
 declare global{ 
