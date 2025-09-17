@@ -5,10 +5,11 @@ import { ResponseEnhancer } from "./shared/middlewares/response.middleware";
 import path from "path";
 import fs from 'fs'
 import { HandleError } from "./shared/utils/error.utils";
-import { userService } from "./modules/users/user.service";
+
 import { userRouter } from "./modules/users/user.routes";
 import { courseRouter } from "./modules/courses/course.routes";
 import { authRouter } from "./modules/auth/auth.routes";
+import { userService } from './modules/users/user.index';
 
 
 const app =express();
@@ -25,8 +26,8 @@ app.use(express.static(path.join(__dirname , 'public') , {
 }));
 
 app.use('/uploads' , express.static(path.join(__dirname , 'uploads')));
-
-userService.adminUserSeed();
+async function bootstrap(){
+ await userService.adminUserSeed();
 //! routes 
 
 //user
@@ -61,4 +62,10 @@ app.listen(Port , ()=>{
   console.log('App is running in port: ', Port);    
 });
 
+}   
 }
+bootstrap().catch( (err)=>{
+    console.log('err message on startup' + err);
+
+    process.exit(1);
+})

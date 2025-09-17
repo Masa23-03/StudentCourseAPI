@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
-import { courseService } from "./course.service";
 import { HttpErrorStatus } from "../../shared/utils/types.utils";
+import { CourseService } from "./course.service";
 
 
 export class CourseController{
-    private service = courseService;
+   constructor(private service:CourseService){
+
+    }
 
 
 //POST /courses → Create a new course (only COACH or ADMIN)
@@ -52,7 +54,7 @@ updateCourse= (req:  Request<{ id: string }>, res: Response) =>{
  deleteCourse= (req:  Request<{ id: string }>, res: Response) =>{
      const user = req.user!;
     const { id } = req.params;
-    const deletedCourse = courseService.deleteCourse(user.id, id);
+    const deletedCourse = this.service.deleteCourse(user.id, id);
     if(!deletedCourse)return res.error({statusCode:500 , message:'Failed to delete'});
     res.ok({deleted: deletedCourse});
  }

@@ -1,11 +1,18 @@
 import { CourseRepository } from "./course.repository"
-import { userService } from "../users/user.service";
+import { UserService } from "../users/user.service";
 import { Course } from "./course.entity"
 import { removeFields } from "../../shared/utils/object.utils";
+import { coursesData } from "./course.data";
+import { userService } from "../users/user.index";
 
 
-class CourseService{
-private repo=new CourseRepository();
+export class CourseService{
+    
+private readonly repo;
+constructor(){
+    this.repo=new CourseRepository(coursesData);
+
+}
 getCourses(){
     return this.repo.findAll();
 }
@@ -26,11 +33,14 @@ if(!creator)return null;
 if (creator.role==='STUDENT') return null;
 
 
-const course:Omit<Course, 'id' | 'createdAt'|'updatedAt'> ={
+const course:Omit<Course, 'id' > ={
 
 title , 
 description , 
-creatorId 
+creatorId ,
+createdAt:new Date(),
+updatedAt:new Date(),
+
 }
 if(image) course.image=image;
 
@@ -48,11 +58,12 @@ if(!user)return null;
 
 if(user.id === course.creatorId){
     const updatedCourse:Partial<Course> = {
-
+        updatedAt:new Date()
     }
     if(title)updatedCourse.title=title;
     if(description)updatedCourse.description=description;
     if(image)updatedCourse.image=image;
+    
     
     const updateCourse= this.repo.update(courseId , updatedCourse);
     if(!updateCourse)return null;
@@ -75,4 +86,4 @@ deleteCourse(requestedId:string , id:string):boolean{
 
 }
 
-export const courseService=new CourseService();
+

@@ -3,7 +3,7 @@ import { verifyJwt } from "../../modules/auth/utils/jwt.util"
 import { Role } from "../utils/types.utils"
 import { CustomError } from "../utils/error.utils"
 import { HttpErrorStatus } from "../utils/types.utils"
-import { userService } from "../../modules/users/user.service"
+import { userService } from "../../modules/users/user.index"
 
 
 
