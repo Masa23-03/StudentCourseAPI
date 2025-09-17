@@ -1,9 +1,9 @@
 import {faker} from '@faker-js/faker'
-import { Course } from '../modules/courses/course.entity'
+import { Course } from '../../modules/courses/course.entity'
 import { COURSE_DATASET } from '../data/course.dataset'
-import { usersData } from '../modules/users/user.data';
-import { CustomError } from '../shared/utils/error.utils';
-import { HttpErrorStatus } from '../shared/utils/types.utils';
+import { usersData } from '../../modules/users/user.data';
+import { CustomError } from '../utils/error.utils';
+import { HttpErrorStatus } from '../utils/types.utils';
 
 
 function getAdminId():string{

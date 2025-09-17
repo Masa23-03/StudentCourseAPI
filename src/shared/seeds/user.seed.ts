@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
-import { User } from "../modules/users/user.entity";
-import { Role } from "../shared/utils/types.utils";
+import { User } from "../../modules/users/user.entity";
+import { Role } from "../utils/types.utils";
 
 function makeRandomUser(role:User['role'] , overrides: Partial<User>={}):User{
     const randomUser:User={
