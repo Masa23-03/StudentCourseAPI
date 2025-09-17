@@ -120,7 +120,3 @@ function isObject<T>(value: T): value is Extract<T, object> {
 export function isEqualIgnoringArrayOrder<T>(a: T, b: T): boolean {
   return isDeepStrictEqual(sortArraysDeep(a), sortArraysDeep(b));
 }
-
-export function pickRandomArrayIndex<T>(arr : readonly T[]){
-  return arr[Math.floor(Math.random() * arr.length)];
-}
