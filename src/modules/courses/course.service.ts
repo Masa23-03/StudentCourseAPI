@@ -1,9 +1,9 @@
 import { CourseRepository } from "./course.repository"
-import { UserService } from "../users/user.service";
 import { Course } from "./course.entity"
 import { removeFields } from "../../shared/utils/object.utils";
 import { coursesData } from "./course.data";
 import { userService } from "../users/user.index";
+import { courseResponse } from "./types/dto.types";
 
 
 export class CourseService{
@@ -16,7 +16,7 @@ constructor(){
 getCourses(){
     return this.repo.findAll();
 }
-getCourse(id:string): Omit<Course , 'creatorId'>|null {
+getCourse(id:string): courseResponse|null {
     const course=this.repo.findById(id);
     if(!course)return null;
     const courseWithoutUserId=removeFields(course , ['creatorId']);
@@ -25,7 +25,7 @@ getCourse(id:string): Omit<Course , 'creatorId'>|null {
 }
 
 
-createCourse(title:string , description:string ,creatorId:string , image?:string  ):Omit<Course , 'creatorId'> | null{
+createCourse(title:string , description:string ,creatorId:string , image?:string  ):courseResponse | null{
 //check id user exist
 const creator=userService.getUser(creatorId);
 if(!creator)return null;
@@ -49,14 +49,13 @@ const courseWithoutUserId=removeFields(courseCreated , ['creatorId']);
 return courseWithoutUserId;
 
 }
-updateCourse(requestedId:string , courseId:string ,  title?:string , description?:string , image?:string ):Omit<Course , 'creatorId'> | null{
+updateCourse( courseId:string ,  title?:string , description?:string , image?:string ):courseResponse | null{
 
 const course = this.repo.findById(courseId); 
 if(!course)return null;
-const user=userService.getUser(requestedId);
-if(!user)return null;
 
-if(user.id === course.creatorId){
+
+
     const updatedCourse:Partial<Course> = {
         updatedAt:new Date()
     }
@@ -68,19 +67,13 @@ if(user.id === course.creatorId){
     const updateCourse= this.repo.update(courseId , updatedCourse);
     if(!updateCourse)return null;
     return removeFields(updateCourse, ['creatorId']);
-}
-return null;
+    return null;
+
 
 }
-deleteCourse(requestedId:string , id:string):boolean{
-    const course=this.repo.findById(id);
-    if(!course)return false;
+deleteCourse(id:string):boolean{
 
-    const user=userService.getUser(requestedId);
-    if(!user)return false;
-    
-    if(user.id === course.creatorId)return this.repo.delete(id);
-    else return false;
+    return this.repo.delete(id);
     
 }
 

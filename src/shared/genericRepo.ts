@@ -1,4 +1,4 @@
-import { v4 as uuid4  } from "uuid";
+import { randomUUID  } from 'node:crypto';
 type Required={
   id: string;
 
@@ -31,7 +31,7 @@ public create(payload: Omit<T, "id" >): T{
 
  const data = {
       ...(payload as object),
-      id:uuid4(),
+      id:randomUUID(),
     
     } as T;
 

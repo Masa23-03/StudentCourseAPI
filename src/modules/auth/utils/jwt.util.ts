@@ -1,5 +1,8 @@
-import jwt, { Jwt, SignOptions } from 'jsonwebtoken';
+import 'dotenv/config'
+
 import { getEnvsOrThrow } from '../../../shared/utils/envs.utils';
+import jwt, {  SignOptions } from 'jsonwebtoken';
+
 
 
 const JwtSecret=getEnvsOrThrow('JWT_SECRET');

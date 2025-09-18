@@ -12,7 +12,7 @@ import { authRouter } from "./modules/auth/auth.routes";
 import { userService } from './modules/users/user.index';
 
 
-const app =express();
+export const app =express();
 const Port=getEnvsOrThrow('PORT');
 
 app.use(express.json());

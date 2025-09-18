@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { isAuthenticated , requireRole} from "../../shared/middlewares/auth.middleware";
+import { isAuthenticated , checkRole} from "../../shared/middlewares/auth.middleware";
 import { RoleConst } from "../../shared/utils/types.utils";
 import { userController } from "./user.index";
 
@@ -18,6 +18,6 @@ router.get('/me' , isAuthenticated , controller.getMe);
 router.put('/me' , isAuthenticated , controller.updateMe);
 
 
-router.post('/coach' ,isAuthenticated ,requireRole(RoleConst.admin) ,  controller.createCoach );
+router.post('/coach' ,isAuthenticated ,checkRole(RoleConst.admin) ,  controller.createCoach );
 
 export const userRouter = router;
