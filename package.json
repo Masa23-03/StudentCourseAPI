@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "test",
+    "test": "jest",
     "dev": "tsx watch ./src/server.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js"
