@@ -2,3 +2,5 @@ node_modules
 uploads
 .env
 description.md
+MyLocalMySQL.session.sql
+testing.description.md
