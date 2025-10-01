@@ -1,17 +1,23 @@
 import { Request, Response } from "express";
-import { courseService } from "./course.service";
-import { HttpErrorStatus } from "../../shared/utils/types.utils";
-
+import { HttpErrorStatus, StringObject } from "../../shared/utils/types.utils";
+import { CourseService } from "./course.service";
+import { courseResponse, createOrUpdateCourse } from "./types/dto.types";
+import { zodValidation } from "../../shared/utils/zod.utils";
+import { updateCourseSchema, createOrUpdateCourseSchema } from "./utils/schema.util";
 
 export class CourseController{
-    private service = courseService;
+   constructor(private service:CourseService){
+
+    }
 
 
 //POST /courses → Create a new course (only COACH or ADMIN)
-create= (req:Request , res:Response)=>{
+create= (req:Request<StringObject, StringObject , createOrUpdateCourse> , res:Response<courseResponse>)=>{
+    const payLoad=zodValidation(createOrUpdateCourseSchema , req.body , 'COURSE');
     const user=req.user!;
-    const image = req.file? `/uploads/${req.file.filename}`: undefined;
-    const {title , description }=req.body as {title:string ; description:string};
+   
+    const image = req.file ? `/uploads/${req.file.filename}` : payLoad.image;
+    const {title , description }=payLoad 
     const createdCourse=this.service.createCourse(title , description , user.id , image);
     if(!createdCourse){
         return res.error({statusCode:HttpErrorStatus.Forbidden , message:'Forbidden'});
@@ -36,24 +42,26 @@ getCourse=(req:Request<{ id: string }> , res:Response)=>{
 
 }
 //PUT /courses/:id → Update course (only the course creator, role: COACH or ADMIN)
-updateCourse= (req:  Request<{ id: string }>, res: Response) =>{
-    const user=req.user!;
+updateCourse= (req:  Request<{ id: string }, StringObject ,Partial<createOrUpdateCourse>>, res: Response<courseResponse>) =>{
+    
     const {id}=req.params;
-    const image = req.file? `/uploads/${req.file.filename}`: undefined;
-    const { title, description } = req.body as { title?: string; description?: string };
-    const updatedCourse=this.service.updateCourse(user.id , id , title , description , image);
+    const { title, description }=zodValidation(updateCourseSchema , req.body , 'COURSE');
+    const image = req.file ? `/uploads/${req.file.filename}` : undefined;
+    
+    
+    const updatedCourse=this.service.updateCourse( id , title , description , image);
     if(!updatedCourse){
-        return res.error({statusCode:500 , message:'Failed to update'});
+        return res.error({statusCode:HttpErrorStatus.NotFound , message:'Course not found'});
 
     }
     res.ok(updatedCourse);
 }
 //DELETE /courses/:id → Delete course (only the course creator, role: COACH or ADMIN)
  deleteCourse= (req:  Request<{ id: string }>, res: Response) =>{
-     const user = req.user!;
+   
     const { id } = req.params;
-    const deletedCourse = courseService.deleteCourse(user.id, id);
-    if(!deletedCourse)return res.error({statusCode:500 , message:'Failed to delete'});
+    const deletedCourse = this.service.deleteCourse( id);
+    if(!deletedCourse)return res.error({statusCode:HttpErrorStatus.NotFound , message:'Course not found'});
     res.ok({deleted: deletedCourse});
  }
 
