@@ -1,6 +1,6 @@
-import z , {ZodType} from 'zod'
-
+import { z, ZodType } from "zod";
 import { Course } from '../course.entity'
+import { createOrUpdateCourse } from '../types/dto.types'
 
 
 export const courseSchema=z.object({
@@ -14,3 +14,14 @@ export const courseSchema=z.object({
 })satisfies ZodType<Course>
 
 
+export const createOrUpdateCourseSchema=courseSchema.pick({
+title:true , 
+description:true, 
+image:true
+
+})satisfies ZodType<createOrUpdateCourse>;
+
+
+
+export const updateCourseSchema=createOrUpdateCourseSchema.partial()
+                                .refine(obj => Object.keys(obj).length >0,{message:'at least one key must be provided'})

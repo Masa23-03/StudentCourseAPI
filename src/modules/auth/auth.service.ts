@@ -1,9 +1,9 @@
 import { registerDTO , registerResponseDTO , loginDTO , loginResponseDTO } from "./types/dto.types";
-import { userService } from "../users/user.service";
 import { createArgonHash , verifyArgonHash } from "./utils/argon.util";
 import { removeFields } from "../../shared/utils/object.utils";
+import { userService } from "../users/user.index";
 
-class AuthService{
+export class AuthService{
     private service = userService;
 
      public async register(payLoad: registerDTO): Promise<registerResponseDTO>{
@@ -31,4 +31,3 @@ class AuthService{
     }
 }
 
-export const authService=new AuthService();

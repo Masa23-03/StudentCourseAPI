@@ -1,15 +1,15 @@
 import { Router , RequestHandler} from "express";
-import { AuthController } from "./auth.controller";
+import { authController } from "./auth.index";
 
 const router=Router();
-const authController = new AuthController();
+const controller = authController
 
 /*
 POST /auth/register →Register as a (default role).
 POST /auth/login → Authenticate and issue JWT token.
  */
 
-router.post('/register' , authController.register.bind(authController) as RequestHandler);
-router.post('/login' , authController.login.bind(authController) as RequestHandler);
+router.post('/register' , controller.register.bind(controller) as RequestHandler);
+router.post('/login' , controller.login.bind(controller) as RequestHandler);
 
 export const authRouter=router;

@@ -1,8 +1,7 @@
-
+import { randomUUID  } from 'node:crypto';
 type Required={
   id: string;
-  createdAt: Date;
-  updatedAt: Date;
+
    
    
 
@@ -12,7 +11,7 @@ export class Repository<T extends Required>{
 //findAll, findById, create, update, delete
 
   private arr: T[] = [];
-  private idCounter = 1;
+
 
 
 constructor(arr: T[] = []){
@@ -28,18 +27,17 @@ return this.arr.find( (ele) => ele.id===id);
 
 }
 
-public create(payload: Omit<T, "id" | "createdAt" | "updatedAt">): T{
+public create(payload: Omit<T, "id" >): T{
 
  const data = {
       ...(payload as object),
-      id: this.idCounter.toString(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      id:randomUUID(),
+    
     } as T;
 
     this.arr.push(data);
    
-    this.idCounter++;
+   
     
    
     return data;
@@ -47,11 +45,11 @@ public create(payload: Omit<T, "id" | "createdAt" | "updatedAt">): T{
 
 }
 
-public update(id: string, payLoad: Omit<Partial<T>, "id" | "createdAt" | "updatedAt">): T | null {
+public update(id: string, payLoad: Omit<Partial<T>, "id" >): T | null {
 const element=this.findById(id);
 if(!element) return null;
 Object.assign(element , payLoad);
-element.updatedAt=new Date();
+
 return element;
 
 

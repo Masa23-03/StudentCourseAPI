@@ -1,11 +1,13 @@
-import { userService } from "./user.service";
 import { HttpErrorStatus, StringObject } from "../../shared/utils/types.utils";
 import { Request , Response , NextFunction } from "express";
+import { UserService } from "./user.service";
 
 
 
 export class UserController{
-    private service=userService;
+  constructor(  private service:UserService){
+
+  }
 
 //getUsers 
 getUsers= (req:Request<StringObject , StringObject , StringObject , {page:string , limit:string}> , res:Response)=>{
