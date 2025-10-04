@@ -1,64 +1,31 @@
-import { randomUUID  } from 'node:crypto';
-type Required={
-  id: string;
+export function Repository(model: {
+  findMany: (args?: any) => Promise<any>;
+  findUniqueOrThrow: (args: any) => Promise<any>;
+  create: (args: any) => Promise<any>;
+  update: (args: any) => Promise<any>;
+  delete: (args: any) => Promise<any>;
+}) {
+  return {
+    findAll(args?: Parameters<typeof model.findMany>[0]) {
+      return model.findMany(args as any);
+    },
 
-   
-   
+    findById(where: Parameters<typeof model.findUniqueOrThrow>[0]["where"]) {
+      return model.findUniqueOrThrow({ where } as any);
+    },
 
-}
+    create(data: Parameters<typeof model.create>[0]["data"]) {
+      return model.create({ data } as any);
+    },
 
-export class Repository<T extends Required>{
-//findAll, findById, create, update, delete
-
-  private arr: T[] = [];
-
-
-
-constructor(arr: T[] = []){
-    this.arr=arr;
-
-}
- public findAll(): T[] {
-    return this.arr; 
-  }
-
-public findById(id:string): T|undefined{
-return this.arr.find( (ele) => ele.id===id);
-
-}
-
-public create(payload: Omit<T, "id" >): T{
-
- const data = {
-      ...(payload as object),
-      id:randomUUID(),
-    
-    } as T;
-
-    this.arr.push(data);
-   
-   
-    
-   
-    return data;
-
-
-}
-
-public update(id: string, payLoad: Omit<Partial<T>, "id" >): T | null {
-const element=this.findById(id);
-if(!element) return null;
-Object.assign(element , payLoad);
-
-return element;
-
-
-}
-public delete(id:string):boolean{
-const index=this.arr.findIndex((ele) => ele.id===id);
-if(index===-1)return false;
-this.arr.splice(index , 1);
-return true;
-
-}
+    update(
+      where: Parameters<typeof model.update>[0]["where"],
+      data: Parameters<typeof model.update>[0]["data"]
+    ) {
+      return model.update({ where, data } as any);
+    },
+    delete(where: Parameters<typeof model.delete>[0]["where"]) {
+      return model.delete({ where } as any);
+    },
+  };
 }
