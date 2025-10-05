@@ -21,8 +21,12 @@ export class CourseService {
     });
   }
   async getCourse(id: number) {
-    const course = await this.repo.findById({ id } as any);
-    return course;
+    try {
+      const course = await this.repo.findById({ id } as any);
+      return course;
+    } catch {
+      return null;
+    }
   }
 
   async createCourse(
@@ -63,12 +67,19 @@ export class CourseService {
     if (description) updatedCourse.description = description;
     if (image) updatedCourse.image = image;
 
-    const updateCourse = await this.repo.update({ id } as any, updatedCourse);
-    if (!updateCourse) return null;
-    return updateCourse;
+    try {
+      const updateCourse = await this.repo.update({ id } as any, updatedCourse);
+      return updateCourse;
+    } catch {
+      return null;
+    }
   }
 
   async deleteCourse(id: number) {
-    return await this.repo.delete({ id } as any);
+    try {
+      return await this.repo.delete({ id } as any);
+    } catch {
+      return null;
+    }
   }
 }

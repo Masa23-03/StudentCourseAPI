@@ -34,13 +34,17 @@ export class UserService {
   }
 
   async getUser(id: number) {
-    const user = await this.repo.findById({ id } as any);
-    return removeFields(user, ["password"]);
+    try {
+      const user = await this.repo.findById({ id } as any);
+      return removeFields(user, ["password"]);
+    } catch {
+      return null;
+    }
   }
   async findUserByEmail(email: string) {
     const user = await this.repo.findByEmail(email);
     if (!user) return null;
-    return removeFields(user, ["password"]);
+    return user;
   }
   async createUser(
     name: string,
@@ -63,13 +67,20 @@ export class UserService {
     if (name) payLoad.name = name;
     if (email) payLoad.email = email;
 
-    const user = await this.repo.update({ id } as any, payLoad);
-    return removeFields(user, ["password"]);
+    try {
+      const user = await this.repo.update({ id } as any, payLoad);
+      return removeFields(user, ["password"]);
+    } catch {
+      return null;
+    }
   }
 
   async deleteUser(id: number) {
-    const user = await this.repo.delete({ id } as any);
-    if (!user) return null;
-    return removeFields(user, ["password"]);
+    try {
+      const user = await this.repo.delete({ id });
+      return removeFields(user, ["password"]);
+    } catch {
+      return null;
+    }
   }
 }
