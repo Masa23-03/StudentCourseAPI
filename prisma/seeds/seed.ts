@@ -6,6 +6,7 @@ import { makeRandomUser } from "../../src/shared/seeds/user.seed";
 
 const prisma = new PrismaClient();
 async function main() {
+  console.log("🌱 Seeding...");
   await prisma.user.deleteMany({});
   await prisma.course.deleteMany({});
 

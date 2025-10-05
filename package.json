@@ -31,5 +31,8 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
     "zod": "^4.1.5"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seeds/seed.ts"
   }
 }
