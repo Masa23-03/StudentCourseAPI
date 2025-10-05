@@ -1,31 +1,35 @@
-export function Repository(model: {
-  findMany: (args?: any) => Promise<any>;
-  findUniqueOrThrow: (args: any) => Promise<any>;
-  create: (args: any) => Promise<any>;
-  update: (args: any) => Promise<any>;
-  delete: (args: any) => Promise<any>;
-}) {
-  return {
-    findAll(args?: Parameters<typeof model.findMany>[0]) {
-      return model.findMany(args as any);
-    },
+export class Repository<
+  T,
+  D extends {
+    findMany: (args?: any) => Promise<T[]>;
+    findUniqueOrThrow: (args: any) => Promise<T>;
+    create: (args: any) => Promise<T>;
+    update: (args: any) => Promise<T>;
+    delete: (args: any) => Promise<T>;
+  }
+> {
+  constructor(protected readonly model: D) {}
 
-    findById(where: Parameters<typeof model.findUniqueOrThrow>[0]["where"]) {
-      return model.findUniqueOrThrow({ where } as any);
-    },
+  findAll(args?: Parameters<D["findMany"]>[0]) {
+    return this.model.findMany(args as any);
+  }
 
-    create(data: Parameters<typeof model.create>[0]["data"]) {
-      return model.create({ data } as any);
-    },
+  findById(where: Parameters<D["findUniqueOrThrow"]>[0]["where"]) {
+    return this.model.findUniqueOrThrow({
+      where,
+    });
+  }
 
-    update(
-      where: Parameters<typeof model.update>[0]["where"],
-      data: Parameters<typeof model.update>[0]["data"]
-    ) {
-      return model.update({ where, data } as any);
-    },
-    delete(where: Parameters<typeof model.delete>[0]["where"]) {
-      return model.delete({ where } as any);
-    },
-  };
+  create(data: Parameters<D["create"]>[0]["data"]) {
+    return this.model.create({ data });
+  }
+  update(
+    where: Parameters<D["update"]>[0]["where"],
+    data: Parameters<D["update"]>[0]["data"]
+  ) {
+    return this.model.update({ where, data });
+  }
+  delete(where: Parameters<D["delete"]>[0]["where"]) {
+    return this.model.delete({ where });
+  }
 }
