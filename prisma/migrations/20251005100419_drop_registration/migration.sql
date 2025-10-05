@@ -27,22 +27,5 @@ CREATE TABLE `Course` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- CreateTable
-CREATE TABLE `Registrations` (
-    `courseId` INTEGER NOT NULL,
-    `userId` INTEGER NOT NULL,
-    `register_date` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `status` ENUM('ENROLLED', 'COMPLETED', 'CANCELLED') NOT NULL DEFAULT 'ENROLLED',
-
-    INDEX `Registrations_userId_idx`(`userId`),
-    PRIMARY KEY (`courseId`, `userId`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
 -- AddForeignKey
 ALTER TABLE `Course` ADD CONSTRAINT `Course_creatorId_fkey` FOREIGN KEY (`creatorId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Registrations` ADD CONSTRAINT `Registrations_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Registrations` ADD CONSTRAINT `Registrations_courseId_fkey` FOREIGN KEY (`courseId`) REFERENCES `Course`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
