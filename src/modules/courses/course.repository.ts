@@ -1,11 +1,8 @@
-import { Course } from "./course.entity";
-
+import { CoursePrisma } from "../../shared/services/prisma.service";
 import { Repository } from "../../shared/genericRepo";
-
-
-export class CourseRepository extends Repository<Course>{
-constructor(coursesArr: Course[]){
-    super(coursesArr);
-}
-
+import { Course } from "./course.entity";
+export class CourseRepository extends Repository<Course, typeof CoursePrisma> {
+  constructor() {
+    super(CoursePrisma);
+  }
 }
