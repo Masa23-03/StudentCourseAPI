@@ -8,11 +8,14 @@ import { courseRepo } from "./course.index";
 import { CreatePayload } from "../../shared/utils/types.utils";
 
 export class CourseService {
+  constructor(private readonly repo: CourseRepository) {}
+
+
   getCourses(page: number = 1, limit: number = 10) {
-    return courseRepo.findAll(page, limit);
+    return this.repo.findAll(page, limit);
   }
   getCourse(id: string) {
-    return courseRepo.findById(id);
+    return this.repo.findById(id);
   }
 
   async createCourse(
@@ -27,7 +30,7 @@ export class CourseService {
     //check user role ==> only admin and coach can create course
     if (creator.role === "STUDENT") return null;
 
-    return courseRepo.create({
+    return this.repo.create({
       title: title,
       description: description,
       creatorId: creatorId,
@@ -49,9 +52,9 @@ export class CourseService {
     if (title) updatedCourse.title = title;
     if (description) updatedCourse.description = description;
     if (image) updatedCourse.image = image;
-    return courseRepo.update(courseId, updatedCourse);
+    return this.repo.update(courseId, updatedCourse);
   }
   deleteCourse(id: string) {
-    return courseRepo.delete(id);
+    return this.repo.delete(id);
   }
 }
