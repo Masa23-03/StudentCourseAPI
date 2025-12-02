@@ -1,6 +1,7 @@
 //? declaration merging.ts
 import { UnifiedErrorApiResponse } from "../middlewares/response.middleware";
 import { User } from "../../modules/users/user.entity";
+import { ToCalcPaginationParamsType } from "./pagiantion.api.utils";
 
 export type MyEnvs = {
   PORT: number;
@@ -21,6 +22,10 @@ declare global {
     interface Response {
       create: (data: object) => this;
       ok: (data: object) => this;
+      paginationResponse: (
+        data: object,
+        meta: ToCalcPaginationParamsType
+      ) => this;
       error: (error: UnifiedErrorApiResponse) => this;
     }
 
