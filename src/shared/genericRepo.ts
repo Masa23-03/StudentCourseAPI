@@ -6,8 +6,8 @@ export class MongooseRepository<T> implements GenericRepositoryI<T> {
   //findAll, findById, create, update, delete
   constructor(protected readonly model: Model<T>) {}
   async findAll(
-    page: number,
-    limit: number
+    page: number = 1,
+    limit: number = 10
   ): Promise<{ records: T[]; totalRecords: number }> {
     const records = (await this.model
       .find()
