@@ -46,19 +46,27 @@ export class CourseController {
       StringObject,
       StringObject,
       StringObject,
-      { page: number; limit: number }
+      { page?: string; limit?: string }
     >,
     res: Response
   ) => {
-    const page: number = Number(req.params.page) || 1;
-    const limit: number = Number(req.params.limit) || 10;
+    const { page, limit } = req.query;
+
+    const pageNum = Number(page) || 1;
+    const limitNum = Number(limit) || 10;
 
     const { records, totalRecords } = await this.service.getCourses(
-      page,
-      limit
+      pageNum,
+      limitNum
     );
-    res.paginationResponse(records, { page, limit, totalRecords });
+
+    res.paginationResponse(records, {
+      page: pageNum,
+      limit: limitNum,
+      totalRecords,
+    });
   };
+
   //GET /courses/:id → Get course by ID (public)
   getCourse = async (req: Request<{ id: string }>, res: Response) => {
     const id = req.params.id;

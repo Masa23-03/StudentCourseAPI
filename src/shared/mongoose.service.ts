@@ -17,6 +17,6 @@ export const mongooseService = {
 export const toJSONOutputTransform = {
   virtuals: true,
   transform: (doc: Document, ret: FlatRecord<Record<string, unknown>>) => {
-    return removeFields(ret, ["_id", "__v", "password", "creatorId"]);
+    return removeFields(ret, ["_id", "__v", "password"]);
   },
 };

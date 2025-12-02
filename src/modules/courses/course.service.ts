@@ -6,10 +6,10 @@ export class CourseService {
   constructor(private readonly repo: CourseRepository) {}
 
   getCourses(page: number = 1, limit: number = 10) {
-    return this.repo.findAll(page, limit);
+    return this.repo.findAllWithCreator(page, limit);
   }
   getCourse(id: string) {
-    return this.repo.findById(id);
+    return this.repo.findByIdWithCreator(id);
   }
 
   async createCourse(
@@ -24,7 +24,7 @@ export class CourseService {
     //check user role ==> only admin and coach can create course
     if (creator.role === "STUDENT") return null;
 
-    return this.repo.create({
+    return this.repo.createCourse({
       title: title,
       description: description,
       creatorId: creatorId,
