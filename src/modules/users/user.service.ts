@@ -1,15 +1,13 @@
 import { User } from "./user.entity";
 import { createArgonHash } from "../auth/utils/argon.util";
-import { removeFields } from "../../shared/utils/object.utils";
 import { Role } from "../../shared/utils/types.utils";
-import { userRepo } from "./user.index";
 import { UserRepository } from "./user.repository";
 
 export class UserService {
   constructor(private readonly repo: UserRepository) {}
 
   async adminUserSeed() {
-    const exist = userRepo.findByEmail("admin@no.com");
+    const exist = this.repo.findByEmail("admin@no.com");
     if (!exist) {
       const hashedPassword = await createArgonHash("admin123");
       this.repo.create({
@@ -29,13 +27,13 @@ export class UserService {
   findUserByEmail(email: string): Promise<User | null> {
     return this.repo.findByEmail(email);
   }
-  createUser(
+  async createUser(
     name: string,
     email: string,
     password: string,
     role: Role = "STUDENT"
   ) {
-    const user = this.repo.create({
+    const user = await this.repo.create({
       name: name,
       email: email,
       password: password,
@@ -44,16 +42,16 @@ export class UserService {
 
     return user;
   }
-  updateUser(id: string, name?: string, email?: string) {
+  async updateUser(id: string, name?: string, email?: string) {
     const payLoad: Partial<User> = {};
 
     if (name) payLoad.name = name;
     if (email) payLoad.email = email;
 
-    return this.repo.update(id, payLoad);
+    return await this.repo.update(id, payLoad);
   }
 
-  deleteUser(id: string): Promise<boolean> {
+  deleteUser(id: string) {
     return this.repo.delete(id);
   }
 }
