@@ -1,7 +1,7 @@
 //? declaration merging.ts
 import { UnifiedErrorApiResponse } from "../middlewares/response.middleware";
 import { User } from "../../modules/users/user.entity";
-import { ToCalcPaginationParamsType } from "./pagiantion.api.utils";
+import { ToCalcPaginationParamsType } from "./pagination.api.utils";
 
 export type MyEnvs = {
   PORT: number;

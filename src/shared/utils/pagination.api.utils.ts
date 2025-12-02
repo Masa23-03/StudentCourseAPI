@@ -6,7 +6,7 @@ export type ToCalcPaginationParamsType = {
   totalRecords: number;
 };
 
-export const CalculatePaginationMeta = ({
+export const calculatePaginationMeta = ({
   page,
   limit,
   totalRecords,
