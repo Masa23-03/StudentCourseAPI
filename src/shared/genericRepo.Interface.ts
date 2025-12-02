@@ -1,6 +1,6 @@
 import { CreatePayload, UpdatePayload } from "./utils/types.utils";
 
-export interface genericRepoI<T> {
+export interface GenericRepositoryI<T> {
   findAll(
     page: number,
     limit: number
