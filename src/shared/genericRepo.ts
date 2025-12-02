@@ -1,64 +1,34 @@
-import { randomUUID  } from 'node:crypto';
-type Required={
-  id: string;
+import { Model } from "mongoose";
+import { GenericRepositoryI } from "./genericRepo.Interface";
+import { MongodbModelsType } from "./utils/constants.utils";
+import { CreatePayload, UpdatePayload } from "./utils/types.utils";
 
-   
-   
-
-}
-
-export class Repository<T extends Required>{
-//findAll, findById, create, update, delete
-
-  private arr: T[] = [];
-
-
-
-constructor(arr: T[] = []){
-    this.arr=arr;
-
-}
- public findAll(): T[] {
-    return this.arr; 
+export class MongooseRepository<T> implements GenericRepositoryI<T> {
+  //findAll, findById, create, update, delete
+  constructor(protected readonly model: Model<T>) {}
+  async findAll(
+    page: number,
+    limit: number
+  ): Promise<{ records: T[]; totalRecords: number }> {
+    const items = await this.model
+      .find()
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+    const totalRecords = await this.model.countDocuments().exec();
+    return { records: items, totalRecords };
   }
-
-public findById(id:string): T|undefined{
-return this.arr.find( (ele) => ele.id===id);
-
-}
-
-public create(payload: Omit<T, "id" >): T{
-
- const data = {
-      ...(payload as object),
-      id:randomUUID(),
-    
-    } as T;
-
-    this.arr.push(data);
-   
-   
-    
-   
-    return data;
-
-
-}
-
-public update(id: string, payLoad: Omit<Partial<T>, "id" >): T | null {
-const element=this.findById(id);
-if(!element) return null;
-Object.assign(element , payLoad);
-
-return element;
-
-
-}
-public delete(id:string):boolean{
-const index=this.arr.findIndex((ele) => ele.id===id);
-if(index===-1)return false;
-this.arr.splice(index , 1);
-return true;
-
-}
+  async findById(id: string): Promise<T | null> {
+    return this.model.findById(id).exec();
+  }
+  async create(payload: CreatePayload<T>): Promise<T> {
+    return await this.model.create(payload);
+  }
+  async update(id: string, payLoad: UpdatePayload<T>): Promise<T | null> {
+    return this.model.findByIdAndUpdate(id, payLoad, { new: true }).exec();
+  }
+  async delete(id: string): Promise<boolean> {
+    const result = await this.model.findByIdAndDelete(id).exec();
+    return Boolean(result);
+  }
 }
