@@ -1,11 +1,4 @@
+import { MongooseRepository } from "../../shared/genericRepo";
 import { Course } from "./course.entity";
 
-import { Repository } from "../../shared/genericRepo";
-
-
-export class CourseRepository extends Repository<Course>{
-constructor(coursesArr: Course[]){
-    super(coursesArr);
-}
-
-}
+export class CourseRepository extends MongooseRepository<Course> {}
