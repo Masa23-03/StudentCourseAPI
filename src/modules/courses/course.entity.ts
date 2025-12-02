@@ -1,4 +1,4 @@
-export interface Course {
+export type Course = {
   id: string;
   title: string;
   description: string;
@@ -6,4 +6,4 @@ export interface Course {
   createdAt: Date;
   updatedAt: Date;
   creatorId: string;
-}
+};
