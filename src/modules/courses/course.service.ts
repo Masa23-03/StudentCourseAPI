@@ -1,15 +1,9 @@
 import { CourseRepository } from "./course.repository";
 import { Course } from "./course.entity";
-import { removeFields } from "../../shared/utils/object.utils";
-import { coursesData } from "./course.data";
 import { userService } from "../users/user.index";
-import { courseResponse } from "./types/dto.types";
-import { courseRepo } from "./course.index";
-import { CreatePayload } from "../../shared/utils/types.utils";
 
 export class CourseService {
   constructor(private readonly repo: CourseRepository) {}
-
 
   getCourses(page: number = 1, limit: number = 10) {
     return this.repo.findAll(page, limit);
@@ -37,13 +31,13 @@ export class CourseService {
       image: image ?? null,
     });
   }
-  updateCourse(
+  async updateCourse(
     courseId: string,
     title?: string,
     description?: string,
     image?: string
   ) {
-    const course = courseRepo.findById(courseId);
+    const course = await this.repo.findById(courseId);
     if (!course) return null;
 
     const updatedCourse: Partial<Course> = {
