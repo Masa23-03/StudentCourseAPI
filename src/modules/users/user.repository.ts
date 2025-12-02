@@ -1,16 +1,9 @@
-import { Repository } from "../../shared/genericRepo";
-import { usersData } from "./user.data";
-
+import { MongooseRepository } from "../../shared/genericRepo";
 import { User } from "./user.entity";
 
-export class UserRepository extends Repository<User>{
-
- constructor(usersArr: User[]) {
-    super(usersArr);
+export class UserRepository extends MongooseRepository<User> {
+  async findByEmail(email: string): Promise<User | null> {
+    const record = await this.model.findOne({ email }).exec();
+    return record as User | null;
   }
-
-findByEmail(email:string):User|undefined{
-    return this.findAll().find((u) => u.email === email);
-
-}
 }
