@@ -25,5 +25,5 @@ export const RoleConst = {
 export type RoleConstType = typeof RoleConst;
 export type Role = RoleConstType[keyof RoleConstType];
 
-type CreatePayload<T> = Omit<T, "id" | "createdAt" | "updatedAt">;
-type UpdatePayload<T> = Partial<CreatePayload<T>>;
+export type CreatePayload<T> = Omit<T, "id" | "createdAt" | "updatedAt">;
+export type UpdatePayload<T> = Partial<CreatePayload<T>>;
