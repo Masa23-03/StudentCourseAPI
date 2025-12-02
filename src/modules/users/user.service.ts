@@ -1,78 +1,56 @@
-import { UserRepository } from "./user.repository";
-import {  User } from "./user.entity";
+import { User } from "./user.entity";
 import { createArgonHash } from "../auth/utils/argon.util";
 import { removeFields } from "../../shared/utils/object.utils";
 import { Role } from "../../shared/utils/types.utils";
-import { usersData } from "./user.data";
+import { userRepo } from "./user.index";
 
-
-
-export class UserService{
-    private readonly repo:UserRepository;
-    constructor(){
-        this.repo=new UserRepository(usersData);
+export class UserService {
+  async adminUserSeed() {
+    const exist = userRepo.findByEmail("admin@no.com");
+    if (!exist) {
+      const hashedPassword = await createArgonHash("admin123");
+      userRepo.create({
+        name: "Admin",
+        password: hashedPassword,
+        email: "admin@no.com",
+        role: "ADMIN",
+      });
     }
-
-
-async  adminUserSeed(){
-    const exist=this.repo.findByEmail('admin@no.com');
-    if(!exist){
-        const hashedPassword=await createArgonHash('admin123');
-        this.repo.create({
-            name:'Admin' , 
-            password:hashedPassword , 
-            email:'admin@no.com' , 
-            role:'ADMIN',
-            createdAt:new Date(),
-            updatedAt:new Date()
-        })
-    }
-}
-getUsers(page:number , limit:number){
-    return this.repo.findAll();
-
-}
- getUser(id:string):Omit<User,'password'>|null{
-    const user=this.repo.findById(id);
-    if(!user)return null;
-    const userWithoutPassword=removeFields(user , ['password']);
-    return userWithoutPassword;
-
-}
-findUserByEmail(email:string): User|undefined{
-    return this.repo.findByEmail(email);
-}
-createUser(name:string , email:string , password:string , role:Role = 'STUDENT'):Omit<User,'password'>{
-    const user=this.repo.create({
-        name:name , 
-        email:email , 
-        password:password , 
-        role:role,
-        createdAt:new Date(),
-        updatedAt:new Date()
+  }
+  getUsers(page: number = 1, limit: number = 10) {
+    return userRepo.findAll(page, limit);
+  }
+  getUser(id: string) {
+    return userRepo.findById(id);
+  }
+  findUserByEmail(email: string): Promise<User | null> {
+    return userRepo.findByEmail(email);
+  }
+  createUser(
+    name: string,
+    email: string,
+    password: string,
+    role: Role = "STUDENT"
+  ) {
+    const user = userRepo.create({
+      name: name,
+      email: email,
+      password: password,
+      role: role,
     });
-    
-     const userWithoutPassword=removeFields(user , ['password']);
-    return userWithoutPassword;
- 
+
+    return user;
+  }
+  updateUser(id: string, name?: string, email?: string) {
+    const payLoad: Partial<User> = {};
+
+    if (name) payLoad.name = name;
+    if (email) payLoad.email = email;
+
+    return userRepo.update(id, payLoad);
+  }
+
+  deleteUser(id: string): Promise<boolean> {
+    return userRepo.delete(id);
+  }
 }
-updateUser(id:string , name?:string , email?:string): User|null{
-    const payLoad:Partial<User>={};
-
-    
-    if(name) payLoad.name=name;
-    if(email) payLoad.email=email;
-    payLoad.updatedAt=new Date();
-
-    
-
-    return this.repo.update(id , payLoad);
-}
-
-
-deleteUser(id:string): boolean{
-return this.repo.delete(id);
-}
-
-}
-
