@@ -1,20 +1,21 @@
-import mongoose from "mongoose";
+import "dotenv/config";
 import { createCoachUser, createRandomStudent } from "./user.seed";
 import { faker } from "@faker-js/faker";
 import { UserModel } from "../../modules/users/user.model";
-import { getEnvsOrThrow } from "../utils/envs.utils";
 import { mongooseService } from "../mongoose.service";
 
 const seedDataInMongoose = async () => {
   await mongooseService.connect();
+  await UserModel.deleteMany({});
+  console.log(" users is empty");
+
+  const coachSeed = createCoachUser();
 
   const studentSeeds = faker.helpers.multiple(createRandomStudent, {
     count: 5,
   });
-  const coachSeeds = faker.helpers.multiple(() => createCoachUser(), {
-    count: 5,
-  });
-  await UserModel.create(coachSeeds);
+
+  await UserModel.create([coachSeed, ...studentSeeds]);
   console.log("seeding users is done");
   process.exit(0);
 };
