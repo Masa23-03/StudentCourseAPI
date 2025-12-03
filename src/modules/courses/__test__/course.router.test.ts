@@ -4,7 +4,9 @@ import { userRepo } from "../../users/user.index";
 import { COURSE_DATASET } from "../../../shared/data/course.dataset";
 import { faker } from "@faker-js/faker";
 import { Course } from "../course.entity";
-import { authedTestAgent } from "../../../shared/tests/helpers/supertest.helper";
+import { makeAuthedTestAgent } from "../../../shared/tests/helpers/supertest.helper";
+import { agent } from "supertest";
+import { COURSE_ENDPOINT } from "../../../shared/utils/constants.utils";
 
 describe("POST /api/v1/courses", () => {
   it("POST /api/v1/courses COACH or ADMIN can create a course with valid data.", async () => {
@@ -15,6 +17,7 @@ describe("POST /api/v1/courses", () => {
       email: newCoachSeed.email,
       role: newCoachSeed.role,
     });
+
     const courseElement = faker.helpers.arrayElement(COURSE_DATASET);
 
     const newCourseSeed: Omit<
@@ -25,10 +28,13 @@ describe("POST /api/v1/courses", () => {
       description: courseElement.description,
       creatorId: user.id,
     };
+    const agent = makeAuthedTestAgent({
+      id: user.id,
+      name: user.name,
+      role: user.role,
+    });
 
-    const res = await authedTestAgent
-      .post("/api/v1/courses")
-      .send(newCourseSeed);
+    const res = await agent.post(COURSE_ENDPOINT).send(newCourseSeed);
     expect(res.statusCode).toBe(201);
     console.log(res.body.data, " data");
 

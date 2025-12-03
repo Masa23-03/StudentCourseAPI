@@ -1,16 +1,21 @@
 import supertest from "supertest";
 import { usersData } from "../../../modules/users/user.data";
 import { app } from "../../../server";
-
-const user1 = usersData[0]!;
-const token = singJWT({ name: user1.name, sub: user1.id });
+import { Role } from "../../utils/types.utils";
+import { signJwt } from "../../../modules/auth/utils/jwt.util";
 
 export const unAuthedTestAgent = supertest.agent(app);
 
-export const authedTestAgent = supertest
-  .agent(app)
-  .set("AUTHORIZATION", `Bearer ${token}`);
+export function makeAuthedTestAgent(user: {
+  id: string;
+  name: string;
+  role: Role;
+}) {
+  const token = signJwt({
+    sub: user.id,
+    name: user.name,
+    role: user.role,
+  });
 
-function singJWT(arg0: { name: string; sub: string | undefined }) {
-  throw new Error("Function not implemented.");
+  return supertest.agent(app).set("Authorization", `Bearer ${token}`);
 }
