@@ -5,17 +5,19 @@ import { COURSE_DATASET } from "../../../shared/data/course.dataset";
 import { faker } from "@faker-js/faker";
 import { Course } from "../course.entity";
 import { makeAuthedTestAgent } from "../../../shared/tests/helpers/supertest.helper";
-import { agent } from "supertest";
 import { COURSE_ENDPOINT } from "../../../shared/utils/constants.utils";
+import { Role } from "../../../shared/utils/types.utils";
+import mongoose from "mongoose";
 
 describe("POST /api/v1/courses", () => {
   it("POST /api/v1/courses COACH or ADMIN can create a course with valid data.", async () => {
-    const newCoachSeed = createCoachUser();
+    const seed = createCoachUser();
+
     const user = await userRepo.create({
-      name: newCoachSeed.name,
-      password: newCoachSeed.password,
-      email: newCoachSeed.email,
-      role: newCoachSeed.role,
+      name: seed.name,
+      password: seed.password,
+      email: faker.internet.email().toLowerCase(),
+      role: "COACH",
     });
 
     const userId = (user as any).id ?? (user as any)._id?.toString();
@@ -24,11 +26,13 @@ describe("POST /api/v1/courses", () => {
 
     const newCourseSeed: Omit<
       Course,
-      "id" | "createdAt" | "updatedAt" | "image" | "creatorId"
+      "id" | "createdAt" | "updatedAt" | "creatorId"
     > = {
       title: courseElement.name,
       description: courseElement.description,
+      image: null,
     };
+
     const agent = makeAuthedTestAgent({
       id: userId,
       name: user.name,
@@ -36,8 +40,9 @@ describe("POST /api/v1/courses", () => {
     });
 
     const res = await agent.post(COURSE_ENDPOINT).send(newCourseSeed);
+    console.log("STATUS:", res.statusCode, "BODY:", res.body);
+
     expect(res.statusCode).toBe(201);
-    console.log(res.body.data, " data");
 
     expect(res.body).toEqual({
       success: true,
@@ -46,12 +51,15 @@ describe("POST /api/v1/courses", () => {
         description: newCourseSeed.description,
       }),
     });
+
     const createdCourse = await courseService.getCourse(res.body.data.id);
 
     expect(createdCourse).toBeDefined();
     expect(createdCourse).not.toBeNull();
     expect(Object.keys(createdCourse as any).length).toBeGreaterThanOrEqual(5);
-
-    console.log(res.body);
   });
+});
+
+afterAll(async () => {
+  await mongoose.connection.close();
 });
