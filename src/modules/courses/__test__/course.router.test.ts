@@ -18,18 +18,19 @@ describe("POST /api/v1/courses", () => {
       role: newCoachSeed.role,
     });
 
+    const userId = (user as any).id ?? (user as any)._id?.toString();
+
     const courseElement = faker.helpers.arrayElement(COURSE_DATASET);
 
     const newCourseSeed: Omit<
       Course,
-      "id" | "createdAt" | "updatedAt" | "image"
+      "id" | "createdAt" | "updatedAt" | "image" | "creatorId"
     > = {
       title: courseElement.name,
       description: courseElement.description,
-      creatorId: user.id,
     };
     const agent = makeAuthedTestAgent({
-      id: user.id,
+      id: userId,
       name: user.name,
       role: user.role,
     });
