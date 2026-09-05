@@ -1,23 +1,23 @@
 import { Router } from "express";
-import { isAuthenticated , checkRole} from "../../shared/middlewares/auth.middleware";
+import { UserController } from "./user.controller";
+import { isAuthenticated , requireRole} from "../../shared/middlewares/auth.middleware";
 import { RoleConst } from "../../shared/utils/types.utils";
-import { userController } from "./user.index";
 
 const router=Router();
 
-const controller=userController
+const userController=new UserController();
 /*
 GET /users/me → Get current user profile (protected).
 PUT /users/me → Update current profile.
 POST /users/coach → : create a COACH user
  */
 
-router.get('/me' , isAuthenticated , controller.getMe);
+router.get('/me' , isAuthenticated , userController.getMe);
 
 
-router.put('/me' , isAuthenticated , controller.updateMe);
+router.put('/me' , isAuthenticated , userController.updateMe);
 
 
-router.post('/coach' ,isAuthenticated ,checkRole(RoleConst.admin) ,  controller.createCoach );
+router.post('/coach' ,isAuthenticated ,requireRole(RoleConst.admin) ,  userController.createCoach );
 
 export const userRouter = router;
