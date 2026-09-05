@@ -6,7 +6,7 @@
     "test": "jest",
     "dev": "tsx watch ./src/server.ts",
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/index.js",
+    "start": "node dist/server.js",
     "seed-mongoose": "tsx src/shared/seeds/mongoose.seed.ts"
   },
   "keywords": [],
