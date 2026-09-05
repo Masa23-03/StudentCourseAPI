@@ -10,7 +10,7 @@ export class UserService {
     const exist = await this.repo.findByEmail("admin@no.com");
     if (!exist) {
       const hashedPassword = await createArgonHash("admin123");
-      this.repo.create({
+      await this.repo.create({
         name: "Admin",
         password: hashedPassword,
         email: "admin@no.com",
