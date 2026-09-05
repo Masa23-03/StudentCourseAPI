@@ -7,15 +7,13 @@ import {
   loginResponseDTO,
   loginResponseDTOWithJWT,
 } from "./types/dto.types";
+import { authService } from "./auth.service";
 import { zodValidation } from "../../shared/utils/zod.utils";
 import { registerDTOSchema , loginDTOSchema } from "./utils/schema.util";
 import { signJwt } from "./utils/jwt.util";
-import { AuthService } from "./auth.service";
 
 export class AuthController {
-    constructor(private service: AuthService){
-
-    }
+    private service=authService;
      public async register(req: Request<StringObject, StringObject, registerDTO>,res: Response<registerResponseDTO>){
        
             const payLoad=zodValidation(registerDTOSchema , req.body , 'AUTH');
