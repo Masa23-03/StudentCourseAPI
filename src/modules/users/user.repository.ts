@@ -1,13 +1,13 @@
 import { Repository } from "../../shared/genericRepo";
-import { UserPrisma } from "../../shared/services/prisma.service";
+
 import { User } from "./user.entity";
 
-export class UserRepository extends Repository<User, typeof UserPrisma> {
-  constructor() {
-    super(UserPrisma);
-  }
+export class UserRepository extends Repository<User>{
 
-  findByEmail(email: string) {
-    return this.model.findUnique({ where: { email } });
-  }
+
+
+findByEmail(email:string):User|undefined{
+    return this.findAll().find((u) => u.email === email);
+
+}
 }

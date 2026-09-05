@@ -1,3 +1,10 @@
-import { Course as PrsimaCourse } from "../../generated/prisma";
 
-export type Course = PrsimaCourse;
+export interface Course{
+  id: string;
+  title: string;
+  description: string;
+  image?: string|undefined; 
+  createdAt: Date;
+  updatedAt: Date;
+  creatorId:string;
+}
