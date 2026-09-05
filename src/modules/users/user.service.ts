@@ -7,7 +7,7 @@ export class UserService {
   constructor(private readonly repo: UserRepository) {}
 
   async adminUserSeed() {
-    const exist = this.repo.findByEmail("admin@no.com");
+    const exist = await this.repo.findByEmail("admin@no.com");
     if (!exist) {
       const hashedPassword = await createArgonHash("admin123");
       this.repo.create({
