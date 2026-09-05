@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { isAuthenticated, checkRole, isAuthorized } from "../../shared/middlewares/auth.middleware";
+import { CourseController } from "./course.controller";
+import { isAuthenticated, requireRole } from "../../shared/middlewares/auth.middleware";
 import { uploadSingle } from "../../shared/config/multer.config";
 import { RoleConst } from "../../shared/utils/types.utils";
-import { courseController  } from "./course.index";
 
 const router=Router();
-const controller=courseController;
+const courseController=new CourseController;
 
 /*
 POST /courses → Create a new course (only COACH or ADMIN)
@@ -15,18 +15,10 @@ PUT /courses/:id → Update course (only the course creator, role: COACH or ADMI
 DELETE /courses/:id → Delete course (only the course creator, role: COACH or ADMIN)
  */
 
-router.post('/' , isAuthenticated , checkRole(RoleConst.admin,RoleConst.coach),  uploadSingle('image'), controller.create);
-router.get('/' ,controller.getCourses );
-router.get('/:id', controller.getCourse);
-router.put('/:id' ,
-    isAuthenticated ,
-    checkRole(RoleConst.admin,RoleConst.coach),
-    isAuthorized,
-    uploadSingle('image'), controller.updateCourse);
-router.delete('/:id' 
-    , isAuthenticated 
-    ,  checkRole(RoleConst.admin,RoleConst.coach)
-    , isAuthorized
-    ,controller.deleteCourse );
+router.post('/' , isAuthenticated , requireRole(RoleConst.admin,RoleConst.coach),  uploadSingle('image'), courseController.create);
+router.get('/' ,courseController.getCourse );
+router.get('/:id', courseController.getCourse);
+router.put('/:id' , isAuthenticated ,  requireRole(RoleConst.admin,RoleConst.coach),uploadSingle('image'), courseController.updateCourse);
+router.delete(':id' , isAuthenticated ,  requireRole(RoleConst.admin,RoleConst.coach),courseController.deleteCourse );
 
 export const courseRouter = router;
