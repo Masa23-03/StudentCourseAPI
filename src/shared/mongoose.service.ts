@@ -5,14 +5,11 @@ import { removeFields } from "./utils/object.utils";
 //connect
 export const mongooseService = {
   connect: async () => {
-    try {
-      await mongoose.connect(getEnvsOrThrow("MONGODB_URL"));
-      console.log("✔️ mongoose connected successfully");
-    } catch (error) {
-      console.log("❌ MongoDb connection error: " + error);
-    }
+    await mongoose.connect(getEnvsOrThrow("MONGODB_URL"));
+    console.log("✔️ mongoose connected successfully");
   },
 };
+
 //method to remove __v and _id
 export const toJSONOutputTransform = {
   virtuals: true,
