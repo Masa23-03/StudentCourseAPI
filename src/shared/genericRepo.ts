@@ -1,66 +1,35 @@
+export class Repository<
+  T,
+  D extends {
+    findMany: (args?: any) => Promise<T[]>;
+    findUniqueOrThrow: (args: any) => Promise<T>;
+    create: (args: any) => Promise<T>;
+    update: (args: any) => Promise<T>;
+    delete: (args: any) => Promise<T>;
+  }
+> {
+  constructor(protected readonly model: D) {}
 
-type Required={
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-   
-   
-
-}
-
-export class Repository<T extends Required>{
-//findAll, findById, create, update, delete
-
-  private arr: T[] = [];
-  private idCounter = 1;
-
-
-constructor(arr: T[] = []){
-    this.arr=arr;
-
-}
- public findAll(): T[] {
-    return this.arr; 
+  findAll(args?: Parameters<D["findMany"]>[0]) {
+    return this.model.findMany(args as any);
   }
 
-public findById(id:string): T|undefined{
-return this.arr.find( (ele) => ele.id===id);
+  findById(where: Parameters<D["findUniqueOrThrow"]>[0]["where"]) {
+    return this.model.findUniqueOrThrow({
+      where,
+    });
+  }
 
-}
-
-public create(payload: Omit<T, "id" | "createdAt" | "updatedAt">): T{
-
- const data = {
-      ...(payload as object),
-      id: this.idCounter.toString(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    } as T;
-
-    this.arr.push(data);
-   
-    this.idCounter++;
-    
-   
-    return data;
-
-
-}
-
-public update(id: string, payLoad: Omit<Partial<T>, "id" | "createdAt" | "updatedAt">): T | null {
-const element=this.findById(id);
-if(!element) return null;
-Object.assign(element , payLoad);
-element.updatedAt=new Date();
-return element;
-
-
-}
-public delete(id:string):boolean{
-const index=this.arr.findIndex((ele) => ele.id===id);
-if(index===-1)return false;
-this.arr.splice(index , 1);
-return true;
-
-}
+  create(data: Parameters<D["create"]>[0]["data"]) {
+    return this.model.create({ data });
+  }
+  update(
+    where: Parameters<D["update"]>[0]["where"],
+    data: Parameters<D["update"]>[0]["data"]
+  ) {
+    return this.model.update({ where, data });
+  }
+  delete(where: Parameters<D["delete"]>[0]["where"]) {
+    return this.model.delete({ where });
+  }
 }

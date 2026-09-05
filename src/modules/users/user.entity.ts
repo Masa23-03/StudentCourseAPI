@@ -1,11 +1,3 @@
-import { Role } from "../../shared/utils/types.utils";
+import { User as PrismaUser } from "../../generated/prisma";
 
-export interface User{
-        id: string;
-        name: string;
-        email: string;
-        password: string;
-        role: Role;
-        createdAt: Date;
-        updatedAt: Date;
-}
+export type User = PrismaUser;
