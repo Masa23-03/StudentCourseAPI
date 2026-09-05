@@ -1,5 +1,4 @@
 import "dotenv/config";
-console.log("MONGODB_URL from server.ts:", process.env.MONGODB_URL);
 
 import express, { Response, Request, NextFunction } from "express";
 import { getEnvsOrThrow } from "./shared/utils/envs.utils";
