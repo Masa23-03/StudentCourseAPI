@@ -1,10 +1,12 @@
+import { ObjectId, SchemaDefinitionProperty } from "mongoose";
+import { User } from "../users/user.entity";
 
-export interface Course{
+export type Course = {
   id: string;
   title: string;
   description: string;
-  image?: string|undefined; 
+  image: string | null; // MongoDB doesn't store undefined, so use null to keep the field explicitly empty
   createdAt: Date;
   updatedAt: Date;
-  creatorId:string;
-}
+  creatorId: SchemaDefinitionProperty<ObjectId | User, Course>;
+};

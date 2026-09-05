@@ -1,66 +1,60 @@
+import { Model } from "mongoose";
+import { GenericRepositoryI } from "./genericRepo.Interface";
+import { CreatePayload, UpdatePayload } from "./utils/types.utils";
 
-type Required={
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-   
-   
+export class MongooseRepository<T> implements GenericRepositoryI<T> {
+  // findAll, findById, create, update, delete
+  constructor(protected readonly model: Model<T>) {}
 
-}
+  async findAll(
+    page: number = 1,
+    limit: number = 10
+  ): Promise<{ records: T[]; totalRecords: number }> {
+    const docs = await this.model
+      .find()
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
 
-export class Repository<T extends Required>{
-//findAll, findById, create, update, delete
+    // run toJSON() so your schema transform (remove _id, __v, password, etc.) is applied
+    const records = docs.map((doc: any) =>
+      doc && typeof doc.toJSON === "function" ? doc.toJSON() : doc
+    ) as T[];
 
-  private arr: T[] = [];
-  private idCounter = 1;
+    const totalRecords = await this.model.countDocuments().exec();
 
-
-constructor(arr: T[] = []){
-    this.arr=arr;
-
-}
- public findAll(): T[] {
-    return this.arr; 
+    return { records, totalRecords };
   }
 
-public findById(id:string): T|undefined{
-return this.arr.find( (ele) => ele.id===id);
+  async findById(id: string): Promise<T | null> {
+    const doc = await this.model.findById(id).exec();
+    if (!doc) return null;
 
-}
+    const json = (doc as any).toJSON ? (doc as any).toJSON() : doc;
+    return json as T;
+  }
 
-public create(payload: Omit<T, "id" | "createdAt" | "updatedAt">): T{
+  async create(payload: CreatePayload<T>): Promise<T> {
+    const record = await this.model.create(payload as any);
+    const json = (record as any).toJSON ? (record as any).toJSON() : record;
+    return json as T;
+  }
 
- const data = {
-      ...(payload as object),
-      id: this.idCounter.toString(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    } as T;
+  async update(id: string, payLoad: UpdatePayload<T>): Promise<T | null> {
+    const doc = await this.model
+      .findByIdAndUpdate(id, payLoad as any, {
+        new: true,
+      })
+      .exec();
 
-    this.arr.push(data);
-   
-    this.idCounter++;
-    
-   
-    return data;
+    if (!doc) return null;
 
+    const json = (doc as any).toJSON ? (doc as any).toJSON() : doc;
+    return json as T;
+  }
 
-}
-
-public update(id: string, payLoad: Omit<Partial<T>, "id" | "createdAt" | "updatedAt">): T | null {
-const element=this.findById(id);
-if(!element) return null;
-Object.assign(element , payLoad);
-element.updatedAt=new Date();
-return element;
-
-
-}
-public delete(id:string):boolean{
-const index=this.arr.findIndex((ele) => ele.id===id);
-if(index===-1)return false;
-this.arr.splice(index , 1);
-return true;
-
-}
+  async delete(id: string): Promise<boolean> {
+    const result = await this.model.findByIdAndDelete(id).exec();
+    return Boolean(result);
+  }
 }

@@ -1,33 +1,29 @@
-export type StringObject=Record<string,unknown>;
+export type StringObject = Record<string, unknown>;
 
-
-//ApiStatusCode 
+//ApiStatusCode
 export const HttpErrorStatus = {
   BadRequest: 400,
   Unauthorized: 401,
   PaymentRequired: 402,
   Forbidden: 403,
   NotFound: 404,
-  ServerError:500
+  ServerError: 500,
+} as const;
 
+export type HttpErrorStatusType = typeof HttpErrorStatus;
 
+export type ErrorStatusCode = HttpErrorStatusType[keyof HttpErrorStatusType];
 
-}as const;
+export type ApiStatusCode = ErrorStatusCode | 200 | 201 | 202 | 204;
 
-export type HttpErrorStatusType=typeof HttpErrorStatus;
+export const RoleConst = {
+  admin: "ADMIN",
+  student: "STUDENT",
+  coach: "COACH",
+} as const;
 
-export type ErrorStatusCode=HttpErrorStatusType[ keyof HttpErrorStatusType];
+export type RoleConstType = typeof RoleConst;
+export type Role = RoleConstType[keyof RoleConstType];
 
-export type ApiStatusCode=|ErrorStatusCode|200|201|202|204
-
-export const RoleConst={
-admin:'ADMIN',
-student:'STUDENT', 
-coach:'COACH'
-}as const;
-
-
-export type RoleConstType=typeof RoleConst;
-export type Role=RoleConstType[keyof RoleConstType];
-
-
+export type CreatePayload<T> = Omit<T, "id" | "createdAt" | "updatedAt">;
+export type UpdatePayload<T> = Partial<CreatePayload<T>>;

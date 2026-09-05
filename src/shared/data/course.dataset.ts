@@ -1,7 +1,12 @@
+interface Course {
+  name: string;
+  skill: string;
+  description: string;
+  link: string;
+}
 
 
-
-export const COURSE_DATASET =[
+export const COURSE_DATASET: Course[] = [
 
     {
         name: "Python for Data Science",
